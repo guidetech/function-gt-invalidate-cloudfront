@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Iniciando build da Lambda function..."
+      - echo "Verificando arquivos do projeto..."
+      - ls -la
+
+  build:
+    commands:
+      - echo "Criando pacote de deployment..."
+      - zip -r function.zip lambda_function.py invalidate.py
+      - echo "Pacote criado com sucesso"
+      - ls -lh function.zip
+
+  post_build:
+    commands:
+      - echo "Build concluído com sucesso"
+      - echo "Artefato pronto para deploy"
+
+artifacts:
+  files:
+    - function.zip
+  name: lambda-deployment-package
+
+cache:
+  paths: []
