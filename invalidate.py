@@ -38,24 +38,15 @@ def createInvalidatePipeline(event, context):
         distribution_id = distribution_id.strip()
         logger.info(f"Iniciando invalidação do CloudFront: {distribution_id}")
 
+        paths = ['/*']
+
         # Criar invalidação no CloudFront
         response = cloudfront_client.create_invalidation(
             DistributionId=distribution_id,
             InvalidationBatch={
                 'Paths': {
-                    'Quantity': 10,
-                    'Items': [
-                        '/index.html',
-                        '/main.js',
-                        '/main.js.map',
-                        '/polyfills.js',
-                        '/polyfills.js.map',
-                        '/runtime.js',
-                        '/runtime.js.map',
-                        '/common.js',
-                        '/common.js.map',
-                        '/styles.css'
-                    ],
+                    'Quantity': len(paths),
+                    'Items': paths,
                 },
                 'CallerReference': job_id
             }
@@ -75,7 +66,7 @@ def createInvalidatePipeline(event, context):
             'statusCode': 200,
             'distribution_id': distribution_id,
             'invalidation_id': invalidation_id,
-            'paths_invalidated': 10,
+            'paths_invalidated': len(paths),
             'execution_time': execution_time
         }
 
